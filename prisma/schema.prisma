@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Departamento {
+  id       String     @id
+  nombre   String
+  municipios Municipio[]
+}
+
+model Municipio {
+  id            String     @id
+  nombre        String
+  departamentoId String
+  departamento   Departamento @relation(fields: [departamentoId], references: [id])
+  colegios       Colegio[]
+}
+
+model Colegio {
+  id          String     @id
+  nombre      String
+  municipioId String
+  municipio   Municipio  @relation(fields: [municipioId], references: [id])
+  sedes       Sede[]
+}
+
+model Sede {
+  id        String     @id
+  nombre    String
+  direccion String?
+  colegioId String
+  colegio   Colegio    @relation(fields: [colegioId], references: [id])
+}
