@@ -6,9 +6,11 @@ export default function SedesPage() {
   const [sedes, setSedes] = useState([]);
 
   useEffect(() => {
-    axios.get("/api/sedes").then((res) => setSedes(res.data));
+    axios.get("/api/sedes") // Asegura que la URL es correcta
+      .then(response => setSedes(response.data))
+      .catch(error => console.error("Error al cargar sedes:", error));
   }, []);
-
+  
   return (
     <div>
       <h1>Sedes</h1>

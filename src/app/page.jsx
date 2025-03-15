@@ -1,10 +1,9 @@
-// src/app/page.jsx
 "use client";
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Card from "@/components/ui/Card"; // ✅ Correcto (sin llaves)
-import { Button } from '@/components/ui/Button';
+import Card from "../components/ui/Card";
+import { Button } from '../components/ui/Button';
 
 export default function Home() {
   const [stats, setStats] = useState({
@@ -40,58 +39,52 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8">
+    <div className="container">
+      <h1 className="titulo-principal">
         Sistema de Gestión de Instituciones Educativas - Meta
       </h1>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="tarjetas">
         <Card title="Municipios">
-          <div className="text-center">
-            <p className="text-4xl font-bold text-blue-600">{stats.municipios}</p>
-            <p className="text-gray-600">Registrados</p>
+          <div className="info">
+            <p className="numero azul">{stats.municipios}</p>
+            <p className="subtitulo">Registrados</p>
           </div>
-          <div className="mt-4">
+          <div className="boton-container">
             <Link href="/municipios">
-              <Button variant="primary" className="w-full">
-                Gestionar Municipios
-              </Button>
+              <Button className="boton">Gestionar Municipios</Button>
             </Link>
           </div>
         </Card>
         
         <Card title="Colegios">
-          <div className="text-center">
-            <p className="text-4xl font-bold text-green-600">{stats.colegios}</p>
-            <p className="text-gray-600">Registrados</p>
+          <div className="info">
+            <p className="numero verde">{stats.colegios}</p>
+            <p className="subtitulo">Registrados</p>
           </div>
-          <div className="mt-4">
+          <div className="boton-container">
             <Link href="/colegios">
-              <Button variant="primary" className="w-full">
-                Gestionar Colegios
-              </Button>
+              <Button className="boton">Gestionar Colegios</Button>
             </Link>
           </div>
         </Card>
         
         <Card title="Sedes Educativas">
-          <div className="text-center">
-            <p className="text-4xl font-bold text-purple-600">{stats.sedes}</p>
-            <p className="text-gray-600">Registradas</p>
+          <div className="info">
+            <p className="numero morado">{stats.sedes}</p>
+            <p className="subtitulo">Registradas</p>
           </div>
-          <div className="mt-4">
+          <div className="boton-container">
             <Link href="/sedes">
-              <Button variant="primary" className="w-full">
-                Gestionar Sedes
-              </Button>
+              <Button className="boton">Gestionar Sedes</Button>
             </Link>
           </div>
         </Card>
       </div>
       
-      <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
-        <h2 className="text-xl font-semibold mb-4">Acerca del Sistema</h2>
-        <p className="mb-4">
+      <div className="acerca">
+        <h2 className="subtitulo">Acerca del Sistema</h2>
+        <p>
           Este sistema permite la gestión eficiente de las instituciones educativas del Departamento del Meta, 
           facilitando la administración de municipios, colegios y sedes educativas.
         </p>

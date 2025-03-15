@@ -1,5 +1,5 @@
 import React from "react";
-import "@/styles/Card.css"; // Importa el archivo CSS correcto
+import "../../styles/Card.css"; // Importa el archivo CSS correcto
 
 export default function Card({ title, children }) {
   return (

@@ -4,19 +4,18 @@ import { Footer } from "../components/layout/Footer";
 import "../styles/global.css"; // Importa estilos globales
 
 export default function RootLayout({ children }) {
-  return <div className="layout">{children}</div>;
-}
-
-
-export function Layout({ children }) {
   return (
-    <div className="layout">
-      <Header />
-      <div className="main-container">
-        <Sidebar />
-        <main className="content">{children}</main>
-      </div>
-      <Footer />
-    </div>
+    <html lang="es">
+      <head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gestión Educativa Meta</title>
+      </head>
+      <body>
+        {children}
+      </body>
+    </html>
   );
 }
+
+

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma from "../../../lib/prisma";
 
 // Manejar solicitud GET para obtener todos los departamentos
 export async function GET() {
