@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,32 +7,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Departamento {
-  id       String     @id
-  nombre   String
-  municipios Municipio[]
+model colegio {
+  id          String    @id @db.VarChar(12)
+  nombre      String    @db.VarChar(200)
+  municipioid String    @db.VarChar(5)
+  municipio   municipio @relation(fields: [municipioid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  sede        sede[]
 }
 
-model Municipio {
-  id            String     @id
-  nombre        String
-  departamentoId String
-  departamento   Departamento @relation(fields: [departamentoId], references: [id])
-  colegios       Colegio[]
+model departamento {
+  id        String      @id @db.VarChar(2)
+  nombre    String      @db.VarChar(100)
+  municipio municipio[]
 }
 
-model Colegio {
-  id          String     @id
-  nombre      String
-  municipioId String
-  municipio   Municipio  @relation(fields: [municipioId], references: [id])
-  sedes       Sede[]
+model municipio {
+  id             String       @id @db.VarChar(5)
+  nombre         String       @db.VarChar(100)
+  departamentoid String       @db.VarChar(2)
+  colegio        colegio[]
+  departamento   departamento @relation(fields: [departamentoid], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model Sede {
-  id        String     @id
-  nombre    String
-  direccion String?
-  colegioId String
-  colegio   Colegio    @relation(fields: [colegioId], references: [id])
+model sede {
+  id        String  @id @db.VarChar(14)
+  nombre    String  @db.VarChar(200)
+  direccion String? @db.VarChar(255)
+  colegioid String  @db.VarChar(12)
+  colegio   colegio @relation(fields: [colegioid], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
