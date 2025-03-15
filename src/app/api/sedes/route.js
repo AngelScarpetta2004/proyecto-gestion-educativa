@@ -1,59 +1,42 @@
-// src/app/api/sedes/route.js
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
-const prisma = new PrismaClient();
-
+// Obtener todas las sedes
 export async function GET() {
   try {
     const sedes = await prisma.sede.findMany({
-      include: { colegio: true }
+      include: { colegio: true }, // Incluye el colegio al que pertenece
     });
-    return NextResponse.json(sedes);
+    return NextResponse.json(sedes, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error al obtener las sedes", error },
+      { status: 500 }
+    );
   }
 }
 
-export async function POST(request) {
+// Crear una nueva sede
+export async function POST(req) {
   try {
-    const data = await request.json();
-    
-    // Validar que el código de sede tenga el formato correcto
-    if (!data.id || data.id.length !== 11) {
+    const { nombre, colegioId } = await req.json();
+
+    if (!nombre || !colegioId) {
       return NextResponse.json(
-        { error: 'El código de sede debe tener 11 dígitos' },
+        { message: "Nombre y colegioId son obligatorios" },
         { status: 400 }
       );
     }
-    
-    // Extraer el código del colegio (primeros 8 dígitos)
-    const colegioId = data.id.substring(0, 8);
-    
-    // Verificar que el colegio exista
-    const colegio = await prisma.colegio.findUnique({
-      where: { id: colegioId }
-    });
-    
-    if (!colegio) {
-      return NextResponse.json(
-        { error: 'El colegio no existe' },
-        { status: 400 }
-      );
-    }
-    
-    // Crear la sede
+
     const sede = await prisma.sede.create({
-      data: {
-        id: data.id,
-        nombre: data.nombre,
-        direccion: data.direccion || null,
-        colegioId: colegioId
-      }
+      data: { nombre, colegioId },
     });
-    
+
     return NextResponse.json(sede, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error al crear la sede", error },
+      { status: 500 }
+    );
   }
 }

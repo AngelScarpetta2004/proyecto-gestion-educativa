@@ -1,58 +1,42 @@
-// src/app/api/colegios/route.js
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
-const prisma = new PrismaClient();
-
+// Obtener todos los colegios
 export async function GET() {
   try {
     const colegios = await prisma.colegio.findMany({
-      include: { municipio: true }
+      include: { municipio: true }, // Incluye el municipio al que pertenece
     });
-    return NextResponse.json(colegios);
+    return NextResponse.json(colegios, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error al obtener los colegios", error },
+      { status: 500 }
+    );
   }
 }
 
-export async function POST(request) {
+// Crear un nuevo colegio
+export async function POST(req) {
   try {
-    const data = await request.json();
-    
-    // Validar que el código de colegio tenga el formato correcto
-    if (!data.id || data.id.length !== 8) {
+    const { nombre, municipioId } = await req.json();
+
+    if (!nombre || !municipioId) {
       return NextResponse.json(
-        { error: 'El código de colegio debe tener 8 dígitos' },
+        { message: "Nombre y municipioId son obligatorios" },
         { status: 400 }
       );
     }
-    
-    // Extraer el código del municipio (primeros 5 dígitos)
-    const municipioId = data.id.substring(0, 5);
-    
-    // Verificar que el municipio exista
-    const municipio = await prisma.municipio.findUnique({
-      where: { id: municipioId }
-    });
-    
-    if (!municipio) {
-      return NextResponse.json(
-        { error: 'El municipio no existe' },
-        { status: 400 }
-      );
-    }
-    
-    // Crear el colegio
+
     const colegio = await prisma.colegio.create({
-      data: {
-        id: data.id,
-        nombre: data.nombre,
-        municipioId: municipioId
-      }
+      data: { nombre, municipioId },
     });
-    
+
     return NextResponse.json(colegio, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error al crear el colegio", error },
+      { status: 500 }
+    );
   }
 }

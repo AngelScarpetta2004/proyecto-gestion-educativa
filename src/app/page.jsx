@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Card } from '@/components/ui/Card';
+import Card from "@/components/ui/Card"; // ✅ Correcto (sin llaves)
 import { Button } from '@/components/ui/Button';
 
 export default function Home() {

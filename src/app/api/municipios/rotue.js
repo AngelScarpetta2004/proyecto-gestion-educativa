@@ -1,58 +1,42 @@
-// src/app/api/municipios/route.js
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
-const prisma = new PrismaClient();
-
+// Obtener todos los municipios
 export async function GET() {
   try {
     const municipios = await prisma.municipio.findMany({
-      include: { departamento: true }
+      include: { departamento: true }, // Incluye el departamento al que pertenece
     });
-    return NextResponse.json(municipios);
+    return NextResponse.json(municipios, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error al obtener los municipios", error },
+      { status: 500 }
+    );
   }
 }
 
-export async function POST(request) {
+// Crear un nuevo municipio
+export async function POST(req) {
   try {
-    const data = await request.json();
-    
-    // Validar que el código de municipio tenga el formato correcto
-    if (!data.id || data.id.length !== 5) {
+    const { nombre, departamentoId } = await req.json();
+
+    if (!nombre || !departamentoId) {
       return NextResponse.json(
-        { error: 'El código de municipio debe tener 5 dígitos' },
+        { message: "Nombre y departamentoId son obligatorios" },
         { status: 400 }
       );
     }
-    
-    // Extraer el código del departamento (primeros 2 dígitos)
-    const departamentoId = data.id.substring(0, 2);
-    
-    // Verificar que el departamento exista
-    const departamento = await prisma.departamento.findUnique({
-      where: { id: departamentoId }
-    });
-    
-    if (!departamento) {
-      return NextResponse.json(
-        { error: 'El departamento no existe' },
-        { status: 400 }
-      );
-    }
-    
-    // Crear el municipio
+
     const municipio = await prisma.municipio.create({
-      data: {
-        id: data.id,
-        nombre: data.nombre,
-        departamentoId: departamentoId
-      }
+      data: { nombre, departamentoId },
     });
-    
+
     return NextResponse.json(municipio, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error al crear el municipio", error },
+      { status: 500 }
+    );
   }
 }

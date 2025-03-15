@@ -1,15 +1,26 @@
-// src/app/colegios/page.jsx
 "use client";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
-
-export default function Colegios() {
+export default function ColegiosPage() {
   const [colegios, setColegios] = useState([]);
-  const [municipios, setMunicipios] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [formData
+
+  useEffect(() => {
+    axios.get("/api/colegios").then((res) => setColegios(res.data));
+  }, []);
+
+  return (
+    <div>
+      <h1>Colegios</h1>
+      {colegios.length === 0 ? (
+        <p>Cargando...</p>
+      ) : (
+        <ul>
+          {colegios.map((col) => (
+            <li key={col.id}>{col.nombre}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
